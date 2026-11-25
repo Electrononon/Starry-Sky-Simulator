@@ -1,22 +1,19 @@
 # Starry Sky Simulator
 
-**Starry Sky Simulator** is a Unity-based night sky simulator inspired by Stellarium. It plots stars in the sky and dynamically adjusts the view based on the user's position in space. Explore the cosmos and experience the stars and constellations shifting and warping as you move.
+A real-time 3D night sky built in Unity. Fly anywhere within 1,000 light-years of the Sun and watch the stars and constellations shift and warp as your viewpoint changes.
 
-![Starry Sky Simulator Image](Images/Starry%20Sky%20Simulator%20Image.png)
----
+**Live demo:** [electrononon.github.io/Starry-Sky-Simulator](https://electrononon.github.io/Starry-Sky-Simulator/)
+
+![Starry Sky Simulator](Images/Starry%20Sky%20Simulator%20Image.png)
 
 ## Features
 
-- Realistic star plotting using data from the **Hipparcos Dataset**  
-- User-controlled movement through space with smooth WASD + vertical controls  
-- Toggleable overlays:  
-  - Star labels  
-  - Constellation lines  
-  - Constellation labels  
-- Milky Way backdrop from the **ESO 2009 Milky Way Panorama**  
-- Dynamic warping and shifting of stars and constellations based on user movement  
-
----
+- 110,000+ stars from the Hipparcos catalogue, placed at their real 3D positions; stars too faint to see from your current position are culled each frame
+- Star brightness and size computed from each star's distance to you, so the sky changes as you move
+- Toggleable star labels, constellation lines and constellation labels
+- Milky Way backdrop from NASA's Deep Star Maps 2020 (Gaia DR2)
+- Free 6-DOF movement with adjustable speed
+- Runs in the browser (WebGL) and on desktop
 
 ## Controls
 
@@ -30,37 +27,35 @@
 - `E` – Increase Movement Speed  
 - `ESC` – Toggle Sidebar Menu  
 
----
+## How it works
 
-## How to Use
+- **Star positions:** Each star's Hipparcos position is stored in 3D space. Every frame, the direction from the player to each star is projected onto a sky sphere around the camera, so constellations distort naturally as you fly.
+- **Brightness:** Apparent magnitude is recalculated from each star's absolute magnitude and current distance (the distance modulus), and drives the star's rendered size. Stars too faint to see are skipped.
+- **Rendering:** All 110,000+ stars are drawn with GPU instancing (`Graphics.DrawMeshInstanced`, in batches of 1,023) and frustum culling, which keeps the frame rate smooth, including in WebGL.
+- **Labels:** Star and constellation labels are pooled, fade in and out, and appear only for stars brighter than a magnitude threshold. When labels overlap on screen, the brighter star's label is kept and the other is hidden, and constellation labels take priority over star labels.
+- **Constellations:** Lines are built from Hipparcos IDs in a JSON file and redrawn between the stars' current sky positions.
+- **Milky Way:** NASA's galactic-coordinate EXR was converted and rotated into equatorial (J2000) coordinates with a Python script, so it lines up with the star data.
 
-1. Open the project in Unity and run the scene.  
-2. Use the WASD keys and space/shift to move around in space.  
-3. Use Q and E to adjust your movement speed for precise control.  
-4. Press ESC to open the sidebar menu to toggle star labels, constellation lines, and constellation labels.  
-5. Observe how stars and constellations warp and shift realistically as you explore within a 1000 light year radius from our Sun.  
+## Running locally
 
----
+1. Install **Unity 6**.
+2. Clone this repo and open the folder in Unity Hub.
+3. Open the main scene and press Play.
 
-## Data Sources and Credits
+The web version lives in [`docs/`](docs) and is hosted on GitHub Pages.
 
-- **Star Data:** Hipparcos Dataset  
-- **Milky Way Background:** ESO 2009 Milky Way Panorama  
-- Developed in Unity  
-
----
 ## Gallery
 
-### Pause Mode (Menu)
-![Starry Sky Simulator Image](Images/Starry%20Sky%20Simulator%20Menu.png)
+| Menu | Explore |
+| --- | --- |
+| ![Menu](Images/Starry%20Sky%20Simulator%20Menu.png) | ![Explore](Images/Starry%20Sky%20Simulator%20Move%20View.png) |
 
-### Explore Mode
-![Starry Sky Simulator Image](Images/Starry%20Sky%20Simulator%20Move%20View.png)
+## Credits
 
----
+- **Star data:** Hipparcos catalogue (ESA)
+- **Milky Way:** NASA/Goddard Space Flight Center Scientific Visualization Studio, Deep Star Maps 2020; Gaia DR2 (ESA/Gaia/DPAC)
+- Built with Unity
 
 ## License
 
-[MIT License](https://opensource.org/license/MIT)
-
----
+[MIT](LICENSE)
